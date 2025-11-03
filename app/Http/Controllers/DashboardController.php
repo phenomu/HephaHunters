@@ -8,11 +8,11 @@ class DashboardController extends Controller
 {
     public function admin()
     {
-        return view('dashboard.admin', ['user' => auth()->user()]);
+        return view('admin.dashboard');
     }
 
     public function hunter()
     {
-        return view('dashboard.hunter', ['user' => auth()->user()]);
+        return view('hunter.dashboard');
     }
 }

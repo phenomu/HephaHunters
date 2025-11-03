@@ -5,6 +5,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BugReportController;
 use App\Http\Controllers\ProfileController;
 
+/*
+|--------------------------------------------------------------------------
+| Redirect by Role
+|--------------------------------------------------------------------------
+*/
 Route::get('/redirect-by-role', function () {
     $user = auth()->user();
 
@@ -23,8 +28,9 @@ Route::get('/redirect-by-role', function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -40,28 +46,38 @@ Route::get('/dashboard', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Dashboard admin
+| Admin Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'admin'])
         ->name('admin.dashboard');
 
+    // 🔹 Admin: lihat semua laporan
     Route::get('/admin/bugs', [BugReportController::class, 'all'])
         ->name('admin.bugs');
+
+    // 🔹 Admin: ubah status & bounty
+    Route::post('/admin/bugs/{bug}/status', [BugReportController::class, 'updateStatus'])
+        ->name('admin.bugs.updateStatus');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Dashboard hunter
+| Hunter Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'isHunter'])->group(function () {
     Route::get('/hunter/dashboard', [DashboardController::class, 'hunter'])
         ->name('hunter.dashboard');
 
-    Route::get('/bugs', [BugReportController::class, 'index'])
-        ->name('bugs.index');
+    // 🔹 CRUD laporan hunter
+    Route::get('/bugs', [BugReportController::class, 'index'])->name('bugs.index');
+    Route::get('/bugs/create', [BugReportController::class, 'create'])->name('bugs.create');
+    Route::post('/bugs', [BugReportController::class, 'store'])->name('bugs.store');
+    Route::get('/bugs/{bug}/edit', [BugReportController::class, 'edit'])->name('bugs.edit');
+    Route::put('/bugs/{bug}', [BugReportController::class, 'update'])->name('bugs.update');
+    Route::delete('/bugs/{bug}', [BugReportController::class, 'destroy'])->name('bugs.destroy');
 });
 
 /*
@@ -77,7 +93,7 @@ Route::middleware(['auth', 'isHunter'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Auth routes Breeze
+| Auth routes (Breeze)
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';

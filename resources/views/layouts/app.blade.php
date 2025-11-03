@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="https://low.my.id/hepha.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Source_Sans_3:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         body {
@@ -50,20 +51,45 @@
         <div class="container mx-auto px-6 py-4 flex items-center justify-between">
             <a href="#" class="text-2xl font-bold text-white fh">Hepha<span class="text-cyan-400">Code</span></a>
             <div class="hidden md:flex items-center space-x-8 text-sm">
-                <a href="{{ route('dashboard') }}" class="text-cyan-400 font-semibold">Dashboard</a>
-                <a href="#" class="hover:text-cyan-400 transition">Reports</a>
-                <a href="#" class="hover:text-cyan-400 transition">Settings</a>
-            </div>
+                @auth
+                    @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}" 
+                        class="text-cyan-400 font-semibold hover:text-cyan-300 transition">Dashboard</a>
+                        <a href="{{ route('admin.bugs') }}" 
+                        class="hover:text-cyan-400 transition">All Reports</a>
+                    @elseif(auth()->user()->role === 'hunter')
+                        <a href="{{ route('hunter.dashboard') }}" 
+                        class="text-cyan-400 font-semibold hover:text-cyan-300 transition">Dashboard</a>
+                        <a href="{{ route('bugs.index') }}" 
+                        class="hover:text-cyan-400 transition">My Reports</a>
+                        <a href="{{ route('bugs.create') }}" 
+                        class="hover:text-cyan-400 transition">New Report</a>
+                    @endif
+                @endauth
+            </div>  
+            @auth
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="hidden md:inline-block bg-cyan-500 text-slate-900 font-bold py-2 px-5 rounded-md hover:bg-cyan-400 transition-colors duration-300">
                     Logout
                 </button>
             </form>
+            @endauth
         </div>
     </nav>
 
     <main class="pt-32 pb-20 text-center">
+        <!-- @auth
+            <div class="container mx-auto px-6 mb-8">
+                <p class="text-lg text-slate-400">
+                    Welcome back, 
+                    <span class="text-cyan-400 font-semibold">
+                        {{ auth()->user()->name }}
+                    </span>
+                </p>
+            </div>
+        @endauth -->
+
         @yield('content')
     </main>
 
@@ -71,5 +97,38 @@
         &copy; 2025 HephaCode — Cyber Security Intelligence.
     </footer>
 
+    @if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: "{{ session('success') }}",
+            background: '#0a0e1a',
+            color: '#e0f2fe',
+            confirmButtonColor: '#0ea5e9',
+            confirmButtonText: 'OK',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        });
+    </script>
+    @endif
+
+    @if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: "{{ session('error') }}",
+            background: '#0a0e1a',
+            color: '#e0f2fe',
+            confirmButtonColor: '#ef4444',
+            confirmButtonText: 'Close'
+        });
+    </script>
+    @endif
 </body>
 </html>
