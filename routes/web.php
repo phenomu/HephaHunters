@@ -27,9 +27,11 @@ Route::get('/redirect-by-role', function () {
 | Halaman awal
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return view('welcome');
+})->name('welcome');
+
 
 
 /*

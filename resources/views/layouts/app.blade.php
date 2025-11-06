@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HephaCode - Advanced Server Security Scanner</title>
     <link href="{{ asset('css/outputs.css') }}" rel="stylesheet">
-    <!--<script src="https://cdn.tailwindcss.com"></script>-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="https://low.my.id/hepha.ico">
@@ -49,52 +48,64 @@
 
     <nav class="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-sm border-b border-slate-700/50">
         <div class="container mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="#" class="text-2xl font-bold text-white fh">Hepha<span class="text-cyan-400">Code</span></a>
-            <div class="hidden md:flex items-center space-x-8 text-sm">
-                @auth
-                    @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}" 
-                        class="text-cyan-400 font-semibold hover:text-cyan-300 transition">Dashboard</a>
-                        <a href="{{ route('admin.bugs') }}" 
-                        class="hover:text-cyan-400 transition">All Reports</a>
-                    @elseif(auth()->user()->role === 'hunter')
-                        <a href="{{ route('hunter.dashboard') }}" 
-                        class="text-cyan-400 font-semibold hover:text-cyan-300 transition">Dashboard</a>
-                        <a href="{{ route('bugs.index') }}" 
-                        class="hover:text-cyan-400 transition">My Reports</a>
-                        <a href="{{ route('bugs.create') }}" 
-                        class="hover:text-cyan-400 transition">New Report</a>
-                    @endif
-                @endauth
-            </div>  
+            <a href="{{ route('welcome') }}" class="text-2xl font-bold text-white fh">Hepha<span class="text-cyan-400">Code</span></a>
+            
+            {{-- NAVIGASI UNTUK USER YANG SUDAH LOGIN --}}
             @auth
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="hidden md:inline-block bg-cyan-500 text-slate-900 font-bold py-2 px-5 rounded-md hover:bg-cyan-400 transition-colors duration-300">
-                    Logout
-                </button>
-            </form>
+                <div class="hidden md:flex items-center space-x-8 text-sm">
+                    @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="{{ request()->routeIs('admin.dashboard') ? 'text-cyan-400 font-bold' : 'hover:text-cyan-400 text-slate-300' }} transition">
+                            Dashboard
+                        </a>
+                        <a href="{{ route('admin.bugs') }}"
+                            class="{{ request()->routeIs('admin.bugs') ? 'text-cyan-400 font-bold' : 'hover:text-cyan-400 text-slate-300' }} transition">
+                            All Reports
+                        </a>
+                    @elseif(auth()->user()->role === 'hunter')
+                        <a href="{{ route('hunter.dashboard') }}"
+                            class="{{ request()->routeIs('hunter.dashboard') ? 'text-cyan-400 font-bold' : 'hover:text-cyan-400 text-slate-300' }} transition">
+                            Dashboard
+                        </a>
+                        <a href="{{ route('bugs.index') }}"
+                            class="{{ request()->routeIs('bugs.index') ? 'text-cyan-400 font-bold' : 'hover:text-cyan-400 text-slate-300' }} transition">
+                            My Reports
+                        </a>
+                        <a href="{{ route('bugs.create') }}"
+                            class="{{ request()->routeIs('bugs.create') ? 'text-cyan-400 font-bold' : 'hover:text-cyan-400 text-slate-300' }} transition">
+                            New Report
+                        </a>
+                    @endif
+                </div> 
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="hidden md:inline-block bg-cyan-500 text-slate-900 font-bold py-2 px-5 rounded-md hover:bg-cyan-400 transition-colors duration-300">
+                        Logout
+                    </button>
+                </form>
             @endauth
+
+            {{-- NAVIGASI UNTUK TAMU (LANDING PAGE) --}}
+            @guest
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{{ route('login') }}" class="text-slate-300 hover:text-cyan-400 transition-colors duration-300 text-sm font-medium">
+                        Register
+                    </a>
+                    <a href="{{ route('register') }}" class="bg-cyan-500 text-slate-900 font-bold py-2 px-5 rounded-md hover:bg-cyan-400 transition-colors duration-300 text-sm btn-glow">
+                        Login
+                    </a>
+                </div>
+            @endguest
         </div>
     </nav>
 
-    <main class="pt-32 pb-20 text-center">
-        <!-- @auth
-            <div class="container mx-auto px-6 mb-8">
-                <p class="text-lg text-slate-400">
-                    Welcome back, 
-                    <span class="text-cyan-400 font-semibold">
-                        {{ auth()->user()->name }}
-                    </span>
-                </p>
-            </div>
-        @endauth -->
-
+    {{-- Hapus 'text-center' dari <main> agar lebih fleksibel --}}
+    <main class="pt-32 pb-20 flex-grow">
         @yield('content')
     </main>
 
     <footer class="border-t border-slate-800 py-6 text-center text-sm text-slate-500">
-        &copy; 2025 HephaCode — Cyber Security Intelligence.
+        &copy; 2025 HephaCode - Cyber Security Intelligence.
     </footer>
 
     @if (session('success'))
@@ -131,4 +142,4 @@
     </script>
     @endif
 </body>
-</html>
+</html> 
