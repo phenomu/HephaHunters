@@ -88,10 +88,10 @@
             {{-- NAVIGASI UNTUK TAMU (LANDING PAGE) --}}
             @guest
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('login') }}" class="text-slate-300 hover:text-cyan-400 transition-colors duration-300 text-sm font-medium">
+                    <a href="{{ route('register') }}" class="text-slate-300 hover:text-cyan-400 transition-colors duration-300 text-sm font-medium">
                         Register
                     </a>
-                    <a href="{{ route('register') }}" class="bg-cyan-500 text-slate-900 font-bold py-2 px-5 rounded-md hover:bg-cyan-400 transition-colors duration-300 text-sm btn-glow">
+                    <a href="{{ route('login') }}" class="bg-cyan-500 text-slate-900 font-bold py-2 px-5 rounded-md hover:bg-cyan-400 transition-colors duration-300 text-sm btn-glow">
                         Login
                     </a>
                 </div>
